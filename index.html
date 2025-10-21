@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lu.Net</title>
+<style>
+/* ===== DARK WEB THEME ===== */
+body {
+  font-family: 'Consolas', monospace;
+  margin: 0;
+  padding: 20px;
+  background-color: #0a0a0a;
+  color: #00ff99;
+  letter-spacing: 0.5px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: rgba(15,15,15,0.95);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0,255,153,0.2);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #00ffcc;
+  text-shadow: 0 0 10px #00ffcc;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+h1:hover {
+  color: #ff0066;
+  text-shadow: 0 0 20px #ff0066;
+}
+
+/* ===== FORMS ===== */
+form {
+  margin-bottom: 25px;
+}
+
+input, button, textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  background: #111;
+  color: #00ff99;
+  border: 1px solid #00ff99;
+  outline: none;
+  font-family: inherit;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #007755;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  background: linear-gradient(90deg, #00ff99, #00ffaa);
+  color: #000;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,255,153,0.4);
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+
+button:hover {
+  box-shadow: 0 0 20px rgba(0,255,153,0.8);
+  transform: scale(1.03);
+}
+
+#loginForm button {
+  background: linear-gradient(90deg, #ff0066, #ff3399);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(255,0,102,0.4);
+}
+
+#loginForm button:hover {
+  box-shadow: 0 0 25px rgba(255,0,102,0.8);
+}
+
+/* ===== TABS WITH ICONS ===== */
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #00ff99;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  cursor: pointer;
+  background: #111;
+  border-right: 1px solid #00ff99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+
+.tab:last-child {
+  border-right: none;
+}
+
+.tab span {
+  margin-left: 8px;
+  font-size: 16px;
+}
+
+.tab:hover {
+  background: #0f0f0f;
+  color: #ff0066;
+}
+
+.tab.active {
+  background: #00ff99;
+  color: #000;
+  font-weight: bold;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.news-item {
+  border-bottom: 1px solid #222;
+  padding: 12px 0;
+}
+
+.news-item h3 {
+  margin: 0 0 6px 0;
+  color: #00ffcc;
+  text-shadow: 0 0 6px #00ffcc;
+}
+
+.news-item p {
+  margin: 0;
+  color: #ccc;
+}
+
+/* ===== PHOTO FEED ===== */
+.photo-container {
+  margin-top: 15px;
+}
+
+.photo-container img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,255,153,0.3);
+  margin-bottom: 15px;
+}
+
+.upload-btn {
+  width: auto;
+  display: inline-block;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, #00ff99, #00ffaa);
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(0,255,153,0.6);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.upload-btn:hover {
+  transform: rotate(90deg);
+  box-shadow: 0 0 25px rgba(0,255,153,0.9);
+}
+
+#uploadForm, #textUploadForm {
+  display: none;
+}
+
+/* ===== TRANSITIONS ===== */
+* {
+  transition: all 0.3s ease;
+}
+
+#logoutBtn {
+  background: linear-gradient(90deg, #ff0066, #ff3399);
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  border: none;
+  box-shadow: 0 0 15px rgba(255,0,102,0.5);
+}
+#logoutBtn:hover {
+  box-shadow: 0 0 25px rgba(255,0,102,0.8);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Lu.Net</h1>
+
+  <!-- Login Form -->
+  <form id="loginForm">
+    <label for="username">Enter your codename:</label>
+    <input type="text" id="username" placeholder="e.g., Ghost_77" required>
+    <button type="submit">Access News</button>
+  </form>
+
+  <!-- Logout Button -->
+  <button id="logoutBtn" style="display:none;">Logout</button>
+
+  <!-- Post-login News Feed -->
+  <div id="postLogin" style="display:none;">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-section="text"><span>TT</span></div>
+      <div class="tab" data-section="photo">️<span>PXT</span></div>
+    </div>
+
+    <!-- TEXT UPLOAD FORM -->
+    <form id="textUploadForm">
+      <input type="text" id="textPost" placeholder="Write a new post..." required>
+      <button type="submit">Post Text</button>
+    </form>
+
+    <!-- TEXT ONLY SECTION -->
+    <div class="section active" id="textSection">
+      <h2>Text Feed</h2>
+      <div id="textFeed">
+        <div class="news-item" data-date="2025-10-18">
+          <h3>Network Expansion</h3>
+          <p>Underground hubs are linking faster than ever before.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHOTO SECTION -->
+    <div class="section" id="photoSection">
+      <h2>Photo Feed</h2>
+      <button class="upload-btn" id="uploadBtn">+</button>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="photo" accept="image/*" required>
+        <textarea id="photoText" placeholder="Add optional text..."></textarea>
+        <button type="submit">Upload</button>
+      </form>
+      <div id="photoFeed" class="photo-container">
+        <div class="news-item" data-date="2025-10-17"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ===== Persistent Login =====
+const savedUser = localStorage.getItem('username');
+if(savedUser){
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('postLogin').style.display = 'block';
+    document.getElementById('logoutBtn').style.display = 'block';
+    document.getElementById('textUploadForm').style.display = 'block';
+    document.getElementById('uploadForm').style.display = 'block';
+    alert(`Welcome back: ${savedUser}`);
+}
+
+// ===== LOGIN =====
+document.getElementById('loginForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    if(username){
+        localStorage.setItem('username', username);
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('postLogin').style.display = 'block';
+        document.getElementById('logoutBtn').style.display = 'block';
+        document.getElementById('textUploadForm').style.display = 'block';
+        document.getElementById('uploadForm').style.display = 'block';
+        alert(`Access granted: ${username}`);
+    }
+});
+
+// ===== LOGOUT =====
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+    localStorage.removeItem('username');
+    document.getElementById('postLogin').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+});
+
+// ===== TAB SWITCHING =====
+document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', function(){
+        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById(this.dataset.section + 'Section').classList.add('active');
+    });
+});
+
+// ===== PHOTO UPLOAD =====
+document.getElementById('uploadBtn').addEventListener('click', ()=>{
+    document.getElementById('photo').click();
+});
+
+document.getElementById('uploadForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const file = document.getElementById('photo').files[0];
+    const text = document.getElementById('photoText').value.trim();
+    if(file){
+        const newsItem = document.createElement('div');
+        newsItem.className = 'news-item';
+        const now = new Date().toISOString().split('T')[0];
+        newsItem.dataset.date = now;
+        newsItem.innerHTML = `
+          <h3>New Upload</h3>
+          <p>${text ? text : ''}</p>
+          <p><strong>By: Anonymous</strong></p>
+          <img src="${URL.createObjectURL(file)}" alt="Uploaded Photo">
+        `;
+        document.getElementById('photoFeed').prepend(newsItem);
+        e.target.reset();
+        alert('Photo + text uploaded as Anonymous!');
+    }
+});
+
+// ===== TEXT UPLOAD =====
+document.getElementById('textUploadForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const text = document.getElementById('textPost').value.trim();
+    if(text){
+        const newsItem = document.createElement('div');
+        newsItem.className = 'news-item';
+        const now = new Date().toISOString().split('T')[0];
+        newsItem.dataset.date = now;
+        newsItem.innerHTML = `
+          <h3>New Text Post</h3>
+          <p>${text}</p>
+          <p><strong>By: Anonymous</strong></p>
+        `;
+        document.getElementById('textFeed').prepend(newsItem);
+        document.getElementById('textUploadForm').reset();
+        alert('Text post uploaded as Anonymous!');
+    }
+});
+</script>
+
+</body>
+</html>
